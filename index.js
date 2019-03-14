@@ -67,6 +67,7 @@ apiRoutes.get('/', function(req, res) {
 // apply the routes to our application with the prefix /api
 app.use('/api', require('./controllers/PublicController'))
 app.use('/api', apiRoutes);
+app.use('/api', require('./controllers/CatalogController'))
 app.use('/api', require('./controllers/ProductController'))
 app.use('/api', require('./controllers/OrdersController'))
 
