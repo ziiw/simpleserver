@@ -5,5 +5,8 @@ const Schema = mongoose.Schema;
 module.exports = mongoose.model('Customer', new Schema({ 
     firstname: String,
     lastname: String,
-    orders: Array
+    orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
+    address: String,
+    email: Array,
+    language: String
 }));

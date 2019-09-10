@@ -12,4 +12,12 @@ ordersRouter.get('/orders', function(req, res) {
   });
 });
 
+ordersRouter.get('/order/:id', function(req, res) {
+  Order.findById(req.body.id , function(error, cataorderlog) {
+    if (error) throw error;
+
+    res.json({success: true, order: order});
+  });
+});
+
 module.exports = ordersRouter;

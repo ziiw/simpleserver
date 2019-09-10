@@ -5,5 +5,7 @@ module.exports = mongoose.model('Product', new Schema({
     name: String,
     description: String,
     meta: Object,
-    price: Number
+    price: Number,
+    category: { type: Schema.Types.String, ref: 'Category' },
+    isVisible: Boolean
 }));
