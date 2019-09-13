@@ -13,15 +13,28 @@ productRouter.get('/products', function(req, res) {
 });
 
 productRouter.post('/products', function(req, res) {
-  const products = new Product(req.body)
+  if (!Array.isArray(req.body.products)) res.json({success: false})
   
-  // save the sample user
-  products.save(function(error) {
-    if (error) throw error;
+  req.body.products.forEach(p => {
+    const product = new Product(p)
 
-    console.log('[Product] - Product added!');
-    res.json({success: true});
+    product.save(function(error) {
+      if (error) throw error;
+
+      console.log('[Product] - Product added!');
+    })
   });
+
+  res.json({success: true});  
+});
+
+productRouter.post('/product/:id', function(req, res) {
+  const product = req.body.product
+  const query = {_id: product._id}
+  Product.findOneAndUpdate(query, product, error => {
+    if (error) return res.json({success: false, message: 'Failed to save in DB.'})
+    return res.json({success: true})
+  })
 });
 
 module.exports = productRouter;

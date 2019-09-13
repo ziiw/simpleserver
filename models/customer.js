@@ -7,6 +7,8 @@ module.exports = mongoose.model('Customer', new Schema({
     lastname: String,
     orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
     address: String,
-    email: Array,
+    email: String,
     language: String
+}, {
+    timestamps: true
 }));

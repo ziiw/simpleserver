@@ -7,10 +7,10 @@ const Product = require('./../models/product');
 const catalogRouter = express.Router();
 
 catalogRouter.get('/catalogs', function(req, res) {
-  Catalog.
-    find().
-    populate('products').
-    exec(function(error, catalogs) {
+  Catalog
+    .find()
+    .populate('products')
+    .exec(function(error, catalogs) {
       if (error) throw error;
 
       res.json({success: true, catalogs: catalogs});

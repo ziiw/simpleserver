@@ -5,7 +5,6 @@ const morgan      = require('morgan');
 const mongoose    = require('mongoose');
 const cors        = require('cors');
 
-const jwt    = require('jsonwebtoken');
 const config = require('./config');
 const tokenHelper = require('./helpers/tokens');
 
@@ -32,13 +31,13 @@ app.get('/', function(req, res) {
 // API ROUTES -------------------
 
 // get an instance of the router for api routes
-var apiRoutes = express.Router();
+const authRoutes = express.Router();
 
 // route middleware to verify a token
-apiRoutes.use(function(req, res, next) {
+authRoutes.use(function(req, res, next) {
 
   // check header or url parameters or post parameters for token
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
   // decode token
   if (token) {
@@ -59,16 +58,34 @@ apiRoutes.use(function(req, res, next) {
   }
 });
 
+// get an instance of the router for api routes
+const adminRoutes = express.Router();
+
+// route middleware to verify a token
+adminRoutes.use(function(req, res, next) {
+  const { isAdmin } = req.decoded
+  if (isAdmin) {
+    next()
+  } else {
+    return res.status(403).send({ 
+      success: false, 
+      message: 'Not authorize, only admin users can reach this resource.' 
+    });
+  }
+});
+
 // route to show a random message (GET http://localhost:8080/api/)
-apiRoutes.get('/', function(req, res) {
+authRoutes.get('/', function(req, res) {
   res.json({ message: 'Welcome to the coolest API on earth!' });
 });
 
 // apply the routes to our application with the prefix /api
 app.use('/api', require('./controllers/PublicController'))
-app.use('/api', apiRoutes);
+app.use('/api', authRoutes);
 app.use('/api', require('./controllers/CatalogController'))
 app.use('/api', require('./controllers/ProductController'))
+app.use('/api', require('./controllers/CustomerController'))
+app.use('/api', adminRoutes);
 app.use('/api', require('./controllers/OrdersController'))
 
 // =======================
